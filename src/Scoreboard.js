@@ -4,34 +4,55 @@ export class Scoreboard extends LitElement {
 
   static get styles() {
     return css `
-      :host {
-        background: #7f7f7f;
-        color: black;
-        border-radius: 30px;
-        text-align: center;
-        width: 200px;
-        box-shadow: 0 5px 30px #f3ecec;
-      }
-
-      #score-board {
-        display: flex;
-        justify-content: space-around;
-      }
-
-      #score1 {
+      .score {
+        height: 200px;
         display: inline;
-        background: #009688;
-        color: white;
-        border: 2px solid #e91e63;
+        font-size: 20px;
       }
 
-      #score2 {
+      .player1 {
         display: inline;
-        background: #00bcd4;
-        color: white;
-        border: 2px solid #673ab7;
+        padding: 10px;
+        border: 2px solid #269f9a;
+        border-bottom-left-radius: 10px;
+        border-top-left-radius: 10px;
       }
-      `;
+
+      .player2 {
+        display: inline;
+        padding: 10px;
+        margin-left: 200px;
+        border: 2px solid #269f9a;
+        border-bottom-left-radius: 10px;
+        border-top-left-radius: 10px;
+      }
+
+      .score1 {
+        width: 100px;
+        padding: 10px;
+        display: inline;
+        border: 2px solid #269f9a;
+        background-color: #fff27f;
+        border-bottom-right-radius: 10px;
+        border-top-right-radius: 10px;
+
+      }
+
+      .score2 {
+        width: 100px;
+        font-size: 20px;
+        padding: 10px;
+        display: inline;
+        border: 2px solid #269f9a;
+        background-color: #fff27f;
+        border-bottom-right-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+
+      h2 {
+        display: inline;
+      }
+    `;
   }
 
   static get properties() {
@@ -47,23 +68,24 @@ export class Scoreboard extends LitElement {
 
   constructor() {
     super();
-    this.scoreP1 = 0;
-    this.scoreP2 = 0;
-    
+    this.turn = 1;
+
   }
 
   render() {
     return html`
-    <div id="score-board">
-      <div id="score1">
-      <p>P1</p>
-        ${this.scoreP1}
+      <div class='score'>
+        <div class='player1'>
+          <h2>Player 1</h2>
+        </div>
+        <slot name="player1" class='score1'></slot>
       </div>
-      <div id="score2">
-      <p>P2</p>
-      ${this.scoreP2}
+      <div class='score'>
+        <div class='player2'>
+          <h2>Player 2</h2>
+        </div><slot name="player2" class='score2'></slot>
+        </div>
       </div>
-    </div>
       `;
   }
 }
