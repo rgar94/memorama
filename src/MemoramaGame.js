@@ -4,29 +4,27 @@ export class MemoramaGame extends LitElement {
   static get styles() {
     return css`
       :host {
-        display: block;
-        padding: 25px;
-        color: var(--memorama-game-text-color, #000);
+        color: #f5f5f5;
       }
 
       h1 {
         text-align: center;
+
       }
 
       .board {
-        height: 640px;
-        width: 1024px;
+        height: fit-content;
+        min-height: 500px;
+        width: 900px;
         list-style: none;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        grid-row-gap: 20px;
-        grid-column-gap: 100px;
+        gap: 20px 160px;
         font-size: 50px;
-        background-color: aquamarine;
-        text-align: center;
-        padding: 20px;
+        background-image: url("https://i.ebayimg.com/00/s/Njg5WDEwMjQ=/z/RoYAAOSwPK5Zga-X/$_57.JPG?set_id=8800005007");
+        background-size: cover;
+        padding: 30px;
         border-radius: 20px;
-        box-shadow: 10px 10px 31px -11px rgba(230, 135, 135, 0.65);
         margin-top: 20px;
       }
 
@@ -46,33 +44,18 @@ export class MemoramaGame extends LitElement {
 
   static get properties() {
     return {
-      title: {
-        type: String
-      },
-      deck: {
+      cardArray: {
         type: Array,
         value: []
       },
       turn: {
         type: Number
       },
-      endTurn: {
-        type: Boolean
-      },
-      canMove: {
-        type: Boolean
-      },
       score: {
         type: Object
       },
       opened: {
         type: Array
-      },
-      namePlayer1: {
-        type: String
-      },
-      namePlayer2: {
-        type: String
       },
       cardList: {
         type: Array
@@ -81,29 +64,39 @@ export class MemoramaGame extends LitElement {
   }
 
   __randomizer() {
-    const deckAux = ['👻','👻','☠','☠','🐼','🐼','🐰','🐰','🦝','🦝','🐯','🐯','🦊','🦊','🦁','🦁','🐱','🐱','🐺','🐺'];
-   this.deck = this.cardList.map(x => ({
+    this.__sortCards();
+   this.cardArray = this.cardList.map(x => ({
       value: x,
       isOpen: false,
     }));
   }
 
+  __sortCards() {
+    let currentIndex = this.cardList.length,
+      temporaryValue, randomIndex;
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      temporaryValue = this.cardList[currentIndex];
+      this.cardList[currentIndex] = this.cardList[randomIndex];
+      this.cardList[randomIndex] = temporaryValue;
+    }
+    return this.cardList;
+  }
 
   __startGame(){
     this.__randomizer();
     this.turn = 1;
-    this.endTurn = false;
-    this.canMove = true;
     this.score = { 1: 0, 2: 0 };
     this.opened = [];
   }
 
   __deleteCards(event) {
-    setTimeout( ()=>{
-      this.opened[0].target.dispatchEvent(new Event(event));
-      this.opened[1].target.dispatchEvent(new Event(event));
-      this.opened = [];
-    }, 1000);
+      setTimeout(() => {
+        this.opened[0].target.dispatchEvent(new Event(event));
+        this.opened[1].target.dispatchEvent(new Event(event));
+        this.opened = [];
+      }, 1000);
   }
 
   __validPlay() {
@@ -112,22 +105,28 @@ export class MemoramaGame extends LitElement {
       this.__deleteCards('correct');
       if (this.score[1] + this.score[2] === this.cardList.length/2) {
         if(this.score[1] > this.score[2]){
-          console.log('Player 1 wins')
+          alert('Player 1 wins');
+          this.winner = 'P1 Wins';
         } else if (this.score[1] < this.score[2]){
-          console.log('Player 2 wins')
+          alert('Player 2 wins');
+          this.winner = 'P2 wins';
+        } else {
+          alert('Empate');
+          this.winner = 'Draw'
         }
       }
-
     } else {
-      this.__deleteCards('close');
-      this.turn = this.turn === 1 ? 2 : 1;
+      this.__deleteCards('incorrect');
+      setTimeout(() => {
+        this.turn = this.turn === 1 ? 2 : 1;
+      }, 1000);
     }
   }
 
 
 
   __openCard(e) {
-    if (this.opened.length >= 0 && this.opened.length <= 2 && this.canMove) {
+    if (this.opened.length >= 0 && this.opened.length <= 2) {
       e.target.dispatchEvent(new Event('open'));
       this.opened.push({
         symbol: e.target.symbol,
@@ -139,10 +138,23 @@ export class MemoramaGame extends LitElement {
     }
   }
 
+  __difficulty(option) {
+  if(option === 'easy'){
+    this.cardList = ['🐲','🐲','🐔','🐔','🐼','🐼','🐰','🐰'];
+  } else   if(option === 'medium'){
+    this.cardList = ['🐲','🐲','🐔','🐔','🐼','🐼','🐰','🐰','🦝','🦝','🐯','🐯','🦊','🦊','🦁','🦁','🐱','🐱','🐺','🐺'];
+  } else  if(option === 'hard'){
+    this.cardList = ['🐲','🐲','🐔','🐔','🐼','🐼','🐰','🐰','🦝','🦝','🐯','🐯','🦊','🦊','🦁','🦁','🐱','🐱','🐺','🐺','🐧','🐧','🦋','🦋','🐞','🐞','🐌','🐌'];
+  }
+
+
+  }
+
   constructor() {
     super();
-    this.cardList = ['👻','👻','☠','☠','🐼','🐼','🐰','🐰','🦝','🦝','🐯','🐯','🦊','🦊','🦁','🦁','🐱','🐱','🐺','🐺'];
+    this.__difficulty('medium');
     this.__startGame();
+    this.winner= '';
 }
 
   render() {
@@ -151,12 +163,12 @@ export class MemoramaGame extends LitElement {
         <h1>Ready to play memorama?</h1>
     </header>
     <div class='center'>
-      <scoreboard-scs>
+      <scoreboard-scs turn=${this.turn}>
         <span slot="player1">${this.score[1]}</span>
         <span slot="player2">${this.score[2]}</span>
       </scoreboard-scs>
       <div class="board">
-        ${this.deck.map(
+        ${this.cardArray.map(
           card => html`
             <card-scs
               .symbol="${card.value}"

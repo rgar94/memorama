@@ -8,17 +8,16 @@ export class Card extends LitElement {
     return css`
 
       button {
-        margin-left: 80px;
         height: 100px;
         width: 100px;
-        border: 2px solid #ff0066;
+        border: 2px solid #cbbd05;
         border-radius: 20px;
-        background-color: darksalmon;
+        background-color: #5e8c1a;
         font-size: 40px;
       }
 
       button:hover {
-        box-shadow: 0 0 15px purple;
+        box-shadow: 0 0 30px #00aeff;
       }
 
       #value {
@@ -29,8 +28,6 @@ export class Card extends LitElement {
       .hide {
         display: none;
       }
-
-
     `;
   }
 
@@ -38,9 +35,6 @@ export class Card extends LitElement {
     return {
       symbol: {
         type: Array
-      },
-      openCard: {
-        type: Boolean
       },
       isPlayed:{
         type: Boolean
@@ -71,7 +65,7 @@ export class Card extends LitElement {
   }
 
   updated() {
-    this.addEventListener('close', () => {
+    this.addEventListener('incorrect', () => {
       this.isPlayed= false;
       this.valueClass = {
         hide: !this.isPlayed
@@ -91,11 +85,10 @@ export class Card extends LitElement {
 
   render() {
     return html`
-
     <div>
       <button  @click="${this.__onClick}" class='${classMap(this.hideClass)}'>
         <div id='unknown' class='${classMap(this.unknownClass)}'>
-          ?
+          ❔
         </div>
         <div id="value"  class='${classMap(this.valueClass)}'>
           ${this.symbol}

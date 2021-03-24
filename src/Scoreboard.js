@@ -4,7 +4,7 @@ export class Scoreboard extends LitElement {
 
   static get styles() {
     return css `
-      .score {
+      #score {
         height: 200px;
         display: inline;
         font-size: 20px;
@@ -13,7 +13,7 @@ export class Scoreboard extends LitElement {
       .player1 {
         display: inline;
         padding: 10px;
-        border: 2px solid #269f9a;
+        border: 2px solid #cbbd05;
         border-bottom-left-radius: 10px;
         border-top-left-radius: 10px;
       }
@@ -22,7 +22,7 @@ export class Scoreboard extends LitElement {
         display: inline;
         padding: 10px;
         margin-left: 200px;
-        border: 2px solid #269f9a;
+        border: 2px solid #cbbd05;
         border-bottom-left-radius: 10px;
         border-top-left-radius: 10px;
       }
@@ -31,11 +31,10 @@ export class Scoreboard extends LitElement {
         width: 100px;
         padding: 10px;
         display: inline;
-        border: 2px solid #269f9a;
-        background-color: #fff27f;
+        border: 2px solid #cbbd05;
+        background-color: #6e383e;
         border-bottom-right-radius: 10px;
         border-top-right-radius: 10px;
-
       }
 
       .score2 {
@@ -43,8 +42,8 @@ export class Scoreboard extends LitElement {
         font-size: 20px;
         padding: 10px;
         display: inline;
-        border: 2px solid #269f9a;
-        background-color: #fff27f;
+        border: 2px solid #cbbd05;
+        background-color: #6e383e;
         border-bottom-right-radius: 10px;
         border-top-right-radius: 10px;
       }
@@ -52,15 +51,22 @@ export class Scoreboard extends LitElement {
       h2 {
         display: inline;
       }
+
+      .turn1 .player1 {
+        background-color: #5e8c1a;
+        box-shadow: 0 0 30px 20px #f3db8f;
+      }
+
+      .turn2 .player2 {
+        background-color: #5e8c1a;
+        box-shadow: 0 0 30px 20px #f3db8f;
+      }
     `;
   }
 
   static get properties() {
     return {
-      scoreP1: {
-        type: Number
-      },
-      scoreP2: {
+      turn: {
         type: Number
       }
     };
@@ -74,13 +80,13 @@ export class Scoreboard extends LitElement {
 
   render() {
     return html`
-      <div class='score'>
+      <div id='score' class='turn${this.turn}'>
         <div class='player1'>
           <h2>Player 1</h2>
         </div>
         <slot name="player1" class='score1'></slot>
       </div>
-      <div class='score'>
+      <div id='score' class='turn${this.turn}'>
         <div class='player2'>
           <h2>Player 2</h2>
         </div><slot name="player2" class='score2'></slot>
