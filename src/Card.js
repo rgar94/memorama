@@ -1,12 +1,9 @@
 import { html, LitElement, css } from 'lit-element';
-import {
-  classMap
-} from 'lit-html/directives/class-map';
+import { classMap } from 'lit-html/directives/class-map';
 
 export class Card extends LitElement {
-  static  get styles() {
+  static get styles() {
     return css`
-
       button {
         height: 100px;
         width: 100px;
@@ -34,68 +31,63 @@ export class Card extends LitElement {
   static get properties() {
     return {
       symbol: {
-        type: Array
+        type: Array,
       },
-      isPlayed:{
-        type: Boolean
+      isPlayed: {
+        type: Boolean,
       },
       valueClass: Object,
       unknownClass: Object,
-      hideClass: Object
-    }
+      hideClass: Object,
+    };
   }
 
   __onClick() {
-    this.isPlayed= true
+    this.isPlayed = true;
     this.valueClass = {
-      hide: !this.isPlayed
+      hide: !this.isPlayed,
     };
     this.unknownClass = {
-      hide: this.isPlayed
+      hide: this.isPlayed,
     };
-
   }
 
   constructor() {
     super();
-    this.isPlayed= false;
+    this.isPlayed = false;
     this.valueClass = {
-      hide: !this.isPlayed
+      hide: !this.isPlayed,
     };
   }
 
   updated() {
     this.addEventListener('incorrect', () => {
-      this.isPlayed= false;
+      this.isPlayed = false;
       this.valueClass = {
-        hide: !this.isPlayed
+        hide: !this.isPlayed,
       };
       this.unknownClass = {
-        hide: this.isPlayed
+        hide: this.isPlayed,
       };
     });
     this.addEventListener('correct', () => {
       this.hideClass = {
-        hide: true
+        hide: true,
       };
     });
-
-
   }
 
   render() {
     return html`
-    <div>
-      <button  @click="${this.__onClick}" class='${classMap(this.hideClass)}'>
-        <div id='unknown' class='${classMap(this.unknownClass)}'>
-          ❔
-        </div>
-        <div id="value"  class='${classMap(this.valueClass)}'>
-          ${this.symbol}
-        </div>
-      </button>
-    </div>
-    <slot></slot>
-      `;
+      <div>
+        <button @click="${this.__onClick}" class="${classMap(this.hideClass)}">
+          <div id="unknown" class="${classMap(this.unknownClass)}">❔</div>
+          <div id="value" class="${classMap(this.valueClass)}">
+            ${this.symbol}
+          </div>
+        </button>
+      </div>
+      <slot></slot>
+    `;
   }
 }

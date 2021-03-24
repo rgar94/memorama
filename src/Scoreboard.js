@@ -1,9 +1,8 @@
 import { html, LitElement, css } from 'lit-element';
 
 export class Scoreboard extends LitElement {
-
   static get styles() {
-    return css `
+    return css`
       #score {
         height: 200px;
         display: inline;
@@ -67,15 +66,14 @@ export class Scoreboard extends LitElement {
   static get properties() {
     return {
       turn: {
-        type: Number
-      }
+        type: Number,
+      },
     };
   }
 
   constructor() {
     super();
     this.turn = 1;
-
   }
 
   render() {

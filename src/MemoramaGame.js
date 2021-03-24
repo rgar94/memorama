@@ -9,7 +9,6 @@ export class MemoramaGame extends LitElement {
 
       h1 {
         text-align: center;
-
       }
 
       .board {
@@ -21,7 +20,7 @@ export class MemoramaGame extends LitElement {
         grid-template-columns: repeat(4, 1fr);
         gap: 20px 160px;
         font-size: 50px;
-        background-image: url("https://i.ebayimg.com/00/s/Njg5WDEwMjQ=/z/RoYAAOSwPK5Zga-X/$_57.JPG?set_id=8800005007");
+        background-image: url('https://i.ebayimg.com/00/s/Njg5WDEwMjQ=/z/RoYAAOSwPK5Zga-X/$_57.JPG?set_id=8800005007');
         background-size: cover;
         padding: 30px;
         border-radius: 20px;
@@ -46,45 +45,53 @@ export class MemoramaGame extends LitElement {
     return {
       cardArray: {
         type: Array,
-        value: []
+        value: [],
       },
       turn: {
-        type: Number
+        type: Number,
       },
       score: {
-        type: Object
+        type: Object,
       },
       opened: {
-        type: Array
+        type: Array,
       },
       cardList: {
-        type: Array
+        type: Array,
       },
-    }
+      currentIndex: {
+        type: Number,
+      },
+      temporaryValue: {
+        type: String,
+      },
+      randomIndex: {
+        type: Number,
+      },
+    };
   }
 
   __randomizer() {
     this.__sortCards();
-   this.cardArray = this.cardList.map(x => ({
+    this.cardArray = this.cardList.map(x => ({
       value: x,
       isOpen: false,
     }));
   }
 
   __sortCards() {
-    let currentIndex = this.cardList.length,
-      temporaryValue, randomIndex;
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = this.cardList[currentIndex];
-      this.cardList[currentIndex] = this.cardList[randomIndex];
-      this.cardList[randomIndex] = temporaryValue;
+    this.currentIndex = this.cardList.length;
+    while (this.currentIndex !== 0) {
+      this.randomIndex = Math.floor(Math.random() * this.currentIndex);
+      this.currentIndex -= 1;
+      this.temporaryValue = this.cardList[this.currentIndex];
+      this.cardList[this.currentIndex] = this.cardList[this.randomIndex];
+      this.cardList[this.randomIndex] = this.temporaryValue;
     }
     return this.cardList;
   }
 
-  __startGame(){
+  __startGame() {
     this.__randomizer();
     this.turn = 1;
     this.score = { 1: 0, 2: 0 };
@@ -92,27 +99,27 @@ export class MemoramaGame extends LitElement {
   }
 
   __deleteCards(event) {
-      setTimeout(() => {
-        this.opened[0].target.dispatchEvent(new Event(event));
-        this.opened[1].target.dispatchEvent(new Event(event));
-        this.opened = [];
-      }, 1000);
+    setTimeout(() => {
+      this.opened[0].target.dispatchEvent(new Event(event));
+      this.opened[1].target.dispatchEvent(new Event(event));
+      this.opened = [];
+    }, 1000);
   }
 
   __validPlay() {
     if (this.opened[0].symbol === this.opened[1].symbol) {
       this.score[this.turn] += 1;
       this.__deleteCards('correct');
-      if (this.score[1] + this.score[2] === this.cardList.length/2) {
-        if(this.score[1] > this.score[2]){
-          alert('Player 1 wins');
+      if (this.score[1] + this.score[2] === this.cardList.length / 2) {
+        if (this.score[1] > this.score[2]) {
+          this.message = 'Player 1 wins';
           this.winner = 'P1 Wins';
-        } else if (this.score[1] < this.score[2]){
-          alert('Player 2 wins');
+        } else if (this.score[1] < this.score[2]) {
+          this.message = 'Player 2 wins';
           this.winner = 'P2 wins';
         } else {
-          alert('Empate');
-          this.winner = 'Draw'
+          this.message = 'Draw';
+          this.winner = 'Draw';
         }
       }
     } else {
@@ -123,11 +130,8 @@ export class MemoramaGame extends LitElement {
     }
   }
 
-
-
   __openCard(e) {
     if (this.opened.length >= 0 && this.opened.length <= 2) {
-      e.target.dispatchEvent(new Event('open'));
       this.opened.push({
         symbol: e.target.symbol,
         target: e.target,
@@ -139,45 +143,94 @@ export class MemoramaGame extends LitElement {
   }
 
   __difficulty(option) {
-  if(option === 'easy'){
-    this.cardList = ['🐲','🐲','🐔','🐔','🐼','🐼','🐰','🐰'];
-  } else   if(option === 'medium'){
-    this.cardList = ['🐲','🐲','🐔','🐔','🐼','🐼','🐰','🐰','🦝','🦝','🐯','🐯','🦊','🦊','🦁','🦁','🐱','🐱','🐺','🐺'];
-  } else  if(option === 'hard'){
-    this.cardList = ['🐲','🐲','🐔','🐔','🐼','🐼','🐰','🐰','🦝','🦝','🐯','🐯','🦊','🦊','🦁','🦁','🐱','🐱','🐺','🐺','🐧','🐧','🦋','🦋','🐞','🐞','🐌','🐌'];
-  }
-
-
+    if (option === 'easy') {
+      this.cardList = ['🐲', '🐲', '🐔', '🐔', '🐼', '🐼', '🐰', '🐰'];
+    } else if (option === 'medium') {
+      this.cardList = [
+        '🐲',
+        '🐲',
+        '🐔',
+        '🐔',
+        '🐼',
+        '🐼',
+        '🐰',
+        '🐰',
+        '🦝',
+        '🦝',
+        '🐯',
+        '🐯',
+        '🦊',
+        '🦊',
+        '🦁',
+        '🦁',
+        '🐱',
+        '🐱',
+        '🐺',
+        '🐺',
+      ];
+    } else if (option === 'hard') {
+      this.cardList = [
+        '🐲',
+        '🐲',
+        '🐔',
+        '🐔',
+        '🐼',
+        '🐼',
+        '🐰',
+        '🐰',
+        '🦝',
+        '🦝',
+        '🐯',
+        '🐯',
+        '🦊',
+        '🦊',
+        '🦁',
+        '🦁',
+        '🐱',
+        '🐱',
+        '🐺',
+        '🐺',
+        '🐧',
+        '🐧',
+        '🦋',
+        '🦋',
+        '🐞',
+        '🐞',
+        '🐌',
+        '🐌',
+      ];
+    }
   }
 
   constructor() {
     super();
     this.__difficulty('medium');
     this.__startGame();
-    this.winner= '';
-}
+    this.message = 'Ready to play memorama?';
+    this.winner = '';
+  }
 
   render() {
     return html`
-    <header>
-        <h1>Ready to play memorama?</h1>
-    </header>
-    <div class='center'>
-      <scoreboard-scs turn=${this.turn}>
-        <span slot="player1">${this.score[1]}</span>
-        <span slot="player2">${this.score[2]}</span>
-      </scoreboard-scs>
-      <div class="board">
-        ${this.cardArray.map(
-          card => html`
-            <card-scs
-              .symbol="${card.value}"
-              @click="${this.__openCard}"
-            ></card-scs>
-          `
-        )}
+      <header>
+        <h1>${this.message}</h1>
+      </header>
+      <div class="center">
+        <scoreboard-scs turn=${this.turn}>
+          <span slot="player1">${this.score[1]}</span>
+          <span slot="player2">${this.score[2]}</span>
+        </scoreboard-scs>
+        <div class="board">
+          ${this.cardArray.map(
+            card => html`
+              <card-scs
+                .symbol="${card.value}"
+                @click="${this.__openCard}"
+              ></card-scs>
+            `
+          )}
+        </div>
       </div>
-    </div>
     `;
   }
 }

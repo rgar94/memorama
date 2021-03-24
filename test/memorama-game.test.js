@@ -25,10 +25,17 @@ describe('MemoramaGame', () => {
   });
 
   it('player select a choice', async () => {
-    const el = await fixture(html` <card-scs .symbol="${'🦊'}" ></card-scs> `);
     const el1 = await fixture(html`<memorama-game></memorama-game>`);
-    el1.opened[0].symbol='🦊';
-    el1.opened[1].symbol='🦊';
-    console.log(el1.opened);
+    const el = await fixture(
+      html` <card-scs .symbol="${'🦊'}" @click="${el1.__openCard}"></card-scs> `
+    );
+    const el2 = await fixture(html` <card-scs .symbol="${'🦊'}"></card-scs> `);
+    el1.opened.push({
+      symbol: el.target,
+    });
+    el1.opened.push({
+      symbol: el2.symbol,
+    });
+    el1.__openCard(el1);
   });
 });
