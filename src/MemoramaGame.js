@@ -75,7 +75,6 @@ export class MemoramaGame extends LitElement {
     this.__sortCards();
     this.cardArray = this.cardList.map(x => ({
       value: x,
-      isOpen: false,
     }));
   }
 
@@ -124,17 +123,22 @@ export class MemoramaGame extends LitElement {
       }
     } else {
       this.__deleteCards('incorrect');
-      setTimeout(() => {
-        this.turn = this.turn === 1 ? 2 : 1;
-      }, 1000);
+      this.turn = this.turn === 1 ? 2 : 1;
     }
   }
 
-  __openCard(e) {
-    if (this.opened.length >= 0 && this.opened.length <= 2) {
+  __openCard(i, e) {
+    if (this.opened.length === 0) {
       this.opened.push({
         symbol: e.target.symbol,
         target: e.target,
+        index: i,
+      });
+    } else if (this.opened.length === 1 && this.opened[0].index !== i) {
+      this.opened.push({
+        symbol: e.target.symbol,
+        target: e.target,
+        index: i,
       });
       if (this.opened.length === 2) {
         this.__validPlay();
@@ -222,10 +226,10 @@ export class MemoramaGame extends LitElement {
         </scoreboard-scs>
         <div class="board">
           ${this.cardArray.map(
-            card => html`
+            (card, i) => html`
               <card-scs
                 .symbol="${card.value}"
-                @click="${this.__openCard}"
+                @click="${e => this.__openCard(i, e)}"
               ></card-scs>
             `
           )}
