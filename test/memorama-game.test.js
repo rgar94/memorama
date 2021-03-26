@@ -1,4 +1,4 @@
-import { html, fixture, waitUntil, expect } from '@open-wc/testing';
+import { html, fixture, waitUntil, aTimeout, expect } from '@open-wc/testing';
 
 import '../memorama-game.js';
 
@@ -26,15 +26,15 @@ describe('MemoramaGame', () => {
 
   it('Player 1 wins', async () => {
     const el1 = await fixture(html`<memorama-game></memorama-game>`);
-    const card = await fixture(html` <card-scs .symbol="${'1'}"></card-scs> `);
-    const card1 = await fixture(html` <card-scs .symbol="${'1'}"></card-scs> `);
+    const card = el1.shadowRoot.getElementById('card1');
+    const card1 = el1.shadowRoot.getElementById('card2');
     el1.opened.push({
-      symbol: card.symbol,
+      symbol: '1',
       target: card,
       index: 0,
     });
     el1.opened.push({
-      symbol: card1.symbol,
+      symbol: '1',
       target: card1,
       index: 1,
     });
@@ -46,15 +46,15 @@ describe('MemoramaGame', () => {
 
   it('Player 2 wins', async () => {
     const el1 = await fixture(html`<memorama-game></memorama-game>`);
-    const card = await fixture(html` <card-scs .symbol="${'1'}"></card-scs> `);
-    const card1 = await fixture(html` <card-scs .symbol="${'1'}"></card-scs> `);
+    const card = el1.shadowRoot.getElementById('card1');
+    const card1 = el1.shadowRoot.getElementById('card2');
     el1.opened.push({
-      symbol: card.symbol,
+      symbol: '1',
       target: card,
       index: 0,
     });
     el1.opened.push({
-      symbol: card1.symbol,
+      symbol: '1',
       target: card1,
       index: 1,
     });
@@ -66,15 +66,15 @@ describe('MemoramaGame', () => {
 
   it('is a draw', async () => {
     const el1 = await fixture(html`<memorama-game></memorama-game>`);
-    const card = await fixture(html` <card-scs .symbol="${'1'}"></card-scs> `);
-    const card1 = await fixture(html` <card-scs .symbol="${'1'}"></card-scs> `);
+    const card = el1.shadowRoot.getElementById('card1');
+    const card1 = el1.shadowRoot.getElementById('card2');
     el1.opened.push({
-      symbol: card.symbol,
+      symbol: '1',
       target: card,
       index: 0,
     });
     el1.opened.push({
-      symbol: card1.symbol,
+      symbol: '1',
       target: card1,
       index: 1,
     });
@@ -82,24 +82,6 @@ describe('MemoramaGame', () => {
     el1.score[2] = 5;
     el1.__validPlay();
     expect(el1.message).to.equal('Draw');
-  });
-
-  it('is not a pair', async () => {
-    const el1 = await fixture(html`<memorama-game></memorama-game>`);
-    const card = await fixture(html` <card-scs .symbol="${'2'}"></card-scs> `);
-    const card1 = await fixture(html` <card-scs .symbol="${'5'}"></card-scs> `);
-    el1.opened.push({
-      symbol: card.symbol,
-      target: card,
-      index: 0,
-    });
-    el1.opened.push({
-      symbol: card1.symbol,
-      target: card1,
-      index: 1,
-    });
-    await waitUntil(() => el1.__validPlay());
-    expect(el1.turn).to.equal(2);
   });
 
   it('add one choice', async () => {
@@ -120,8 +102,8 @@ describe('MemoramaGame', () => {
 
   it('add a second choice', async () => {
     const el1 = await fixture(html`<memorama-game></memorama-game>`);
-    const card = await fixture(html` <card-scs .symbol="${'1'}"></card-scs> `);
-    const card1 = await fixture(html` <card-scs .symbol="${'1'}"></card-scs> `);
+    const card = el1.shadowRoot.getElementById('card1');
+    const card1 = el1.shadowRoot.getElementById('card2');
     el1.opened.push({
       symbol: card1.symbol,
       target: card1,
@@ -136,5 +118,22 @@ describe('MemoramaGame', () => {
     const el = await fixture(html` <card-scs .symbol="${'🦊'}""></card-scs> `);
     el.__onClick();
     expect(el.isPlayed).to.equal(true);
+  });
+
+  it('is not a pair', async () => {
+    const el1 = await fixture(html`<memorama-game></memorama-game>`);
+    const card = el1.shadowRoot.getElementById('card1');
+    const card1 = el1.shadowRoot.getElementById('card2');
+    el1.opened.push({
+      symbol: '1',
+      target: card,
+      index: 0,
+    });
+    el1.opened.push({
+      symbol: '2',
+      target: card1,
+      index: 1,
+    });
+    await waitUntil(() => el1.__validPlay(), 'element', {timeout: 2000});
   });
 });

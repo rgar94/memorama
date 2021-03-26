@@ -220,14 +220,14 @@ export class MemoramaGame extends LitElement {
         <h1>${this.message}</h1>
       </header>
       <div class="center">
-        <scoreboard-scs turn=${this.turn}>
+        <scoreboard-scs turn=${this.turn} id='scoreboard'>
           <span slot="player1">${this.score[1]}</span>
           <span slot="player2">${this.score[2]}</span>
         </scoreboard-scs>
-        <div class="board">
+        <div class="board" id='board'>
           ${this.cardArray.map(
             (card, i) => html`
-              <card-scs
+              <card-scs id='card${i}'
                 .symbol="${card.value}"
                 @click="${e => this.__openCard(i, e)}"
               ></card-scs>
